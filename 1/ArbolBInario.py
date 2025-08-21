@@ -5,7 +5,7 @@ class Nodo:
         self.derecha = None
 
 class ArbolBinarioBusqueda:
-    def __init__(self):
+    def __init__(self): 
         self.raiz = None
 
     def insertar(self, valor):
