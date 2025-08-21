@@ -9,6 +9,5 @@
 1. **Árbol Binario de Búsqueda (Diagnóstico)**  
    - [Notebook](./1/ArbolBinario.ipynb)  
    - [Script Python](./1/ArbolBInario.py)
-   - 
 2. **Historia de la IA**  
    - [Documento PDF](./2/FloresSotoGael-ResumenHistoriaIA.pdf)
