@@ -6,6 +6,8 @@
 
 ## Índice de Tareas 
 
+1. **Árbol Binario de Búsqueda (Diagnóstico)**  
+   - [Script Python](./1/ArbolBInario.py)
 
 
 2. **Historia de la IA**  
