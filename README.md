@@ -1,10 +1,10 @@
-# Tareas de Inteligencia Artificial  
+# Tareas de Inteligencia Artificial (18:00 - 19:00)
 
 **Alumno:** Flores Soto Gael Eduardo  
-
+**Numero de Control:** 20170661
 ---
 
-## Índice de Tareas 
+## Índice 
 
 1. **Árbol Binario de Búsqueda (Diagnóstico)**  
    - [Script Python](./1/ArbolBInario.py)
