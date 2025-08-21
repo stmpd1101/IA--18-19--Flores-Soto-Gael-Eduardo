@@ -1,1 +1,7 @@
-# IA--18-00-17-00--Flores-Soto-Gael-Eduardo
+# Tareas de Inteligencia Artificial  
+
+**Alumno:** Flores Soto Gael Eduardo  
+
+---
+
+## Índice de Tareas 
