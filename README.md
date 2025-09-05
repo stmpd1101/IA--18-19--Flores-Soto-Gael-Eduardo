@@ -13,6 +13,6 @@
 2. **Historia de la IA**
    - [Documento PDF](./2/FloresSotoGael-ResumenHistoriaIA.pdf)
 
-3. **Algoritmo de Dijkstra(Investigación / Ejercicio)**
+3. **Algoritmo de Dijkstra (Investigación / Ejercicio)**
    - [Documento PDF](3/El%20Algoritmo%20de%20Dijkstra%20Investigacion%20-%20Flores%20Soto.pdf)
 
