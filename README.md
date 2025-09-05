@@ -4,11 +4,15 @@
 **Numero de Control:** 20170661
 ---
 
-## Índice 
+## Índice
 
-1. **Árbol Binario de Búsqueda (Diagnóstico)**  
-   - [Notebook](./1/ArbolBinario.ipynb)  
+1. **Árbol Binario de Búsqueda (Diagnóstico)**
+   - [Notebook](./1/ArbolBinario.ipynb)
    - [Script Python](./1/ArbolBinario.py)
-2. **Historia de la IA**  
+
+2. **Historia de la IA**
    - [Documento PDF](./2/FloresSotoGael-ResumenHistoriaIA.pdf)
+
+3. **Algoritmo de Dijkstra**
+   - [Documento PDF](3/El%20Algoritmo%20de%20Dijkstra%20Investigacion%20-%20Flores%20Soto.pdf)
 
