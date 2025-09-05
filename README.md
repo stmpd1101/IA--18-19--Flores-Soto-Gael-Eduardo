@@ -11,3 +11,5 @@
    - [Script Python](./1/ArbolBinario.py)
 2. **Historia de la IA**  
    - [Documento PDF](./2/FloresSotoGael-ResumenHistoriaIA.pdf)
+2. **Algoritmo de Dijkstra**  
+   - [Documento PDF](./3/El Algoritmo de Dijkstra Investigacion - Flores Soto.pdf)
