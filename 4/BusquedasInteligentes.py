@@ -161,7 +161,7 @@ def ucs_puzzle(inicial):
 
 
 # -----------------------------------------
-# Heurística propia (Manhattan + conflicto lineal)
+# Heurística propia 
 # -----------------------------------------
 
 def heuristica_propia(estado):
@@ -236,14 +236,40 @@ def a_estrella_puzzle(inicial):
 # -----------------------------------------
 
 if __name__ == "__main__":
+
     estado_inicial = generar_estado_aleatorio()
 
     print("Estado inicial:")
     for i in range(0, 9, 3):
         print(estado_inicial[i:i+3])
 
-    print("\n--- Ejecutando A* ---")
-    solucion = a_estrella_puzzle(estado_inicial)
+    print("\nSelecciona el algoritmo de búsqueda:")
+    print("1. BFS (Anchura)")
+    print("2. DFS (Profundidad limitada)")
+    print("3. UCS (Costo uniforme / Dijkstra)")
+    print("4. A* (A estrella con heurística propia)")
+
+    opcion = input("\nIngresa el número del algoritmo: ")
+
+    if opcion == "1":
+        print("\n--- Ejecutando BFS ---")
+        solucion = bfs_puzzle(estado_inicial)
+
+    elif opcion == "2":
+        print("\n--- Ejecutando DFS ---")
+        solucion = dfs_puzzle(estado_inicial, limite=40)  # puedes ajustar límite
+
+    elif opcion == "3":
+        print("\n--- Ejecutando UCS ---")
+        solucion = ucs_puzzle(estado_inicial)
+
+    elif opcion == "4":
+        print("\n--- Ejecutando A* ---")
+        solucion = a_estrella_puzzle(estado_inicial)
+
+    else:
+        print("Opción no válida.")
+        exit()
 
     if solucion:
         print(f"\nPasos a la solución: {len(solucion)-1}")
@@ -252,4 +278,4 @@ if __name__ == "__main__":
             for i in range(0, 9, 3):
                 print(paso[i:i+3])
     else:
-        print("No se encontró solución.")
+        print("\nNo se encontró solución.")
