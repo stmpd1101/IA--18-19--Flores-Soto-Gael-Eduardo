@@ -17,3 +17,6 @@
    - [Documento PDF](3/El%20Algoritmo%20de%20Dijkstra%20Investigacion%20-%20Flores%20Soto.pdf)
    - [Notebook](./3/8-Puzzle-Dijkstra.ipynb)
    - [Script Python](./3/8-Puzzle-Dijkstra.py)
+4. **Algoritmo de Búsqueda Inteligente**
+   - [Notebook](./4/BusquedasInteligentes.ipynb)
+   - [Script Python](./4/BusquedasInteligentes.py)
