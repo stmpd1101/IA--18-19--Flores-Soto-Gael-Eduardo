@@ -7,7 +7,7 @@ from PIL import Image
 
 import torch
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
-from transformers import AutoProcessor, AutoModelForTextToWaveform
+from transformers import VitsTokenizer, VitsModel
 
 from scipy.io.wavfile import write as wav_write
 
@@ -110,47 +110,48 @@ class TextPostProcessor:
 
 class SpanishTTSSynthesizer:
     """
-    Síntesis de voz en español usando un modelo TTS de HuggingFace.
-    Ejemplo: facebook/mms-tts-spa
+    Síntesis de voz en español usando el modelo MMS-TTS (VITS) de HuggingFace.
+    Modelo por defecto: facebook/mms-tts-spa
     """
 
     def __init__(self, model_name: str = "facebook/mms-tts-spa", device: Optional[str] = None):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         print(f"[TTS] Cargando modelo {model_name} en {self.device}...")
-        self.processor = AutoProcessor.from_pretrained(model_name)
-        self.model = AutoModelForTextToWaveform.from_pretrained(model_name).to(self.device)
+
+        # Tokenizador y modelo VITS
+        self.tokenizer = VitsTokenizer.from_pretrained(model_name)
+        self.model = VitsModel.from_pretrained(model_name).to(self.device)
         self.model.eval()
 
-    def synthesize_to_file(self, text: str, output_path: str, sample_rate: int = 16000):
+        # Frecuencia de muestreo recomendada por el modelo
+        self.sample_rate = self.model.config.sampling_rate
+
+    def synthesize_to_file(self, text: str, output_path: str):
         """
         Convierte texto a audio y lo guarda como archivo WAV.
+        Uso directo del waveform que entrega el modelo (forma recomendada).
         """
         if not text:
             raise ValueError("El texto para TTS está vacío.")
 
         print("[TTS] Generando audio...")
-        inputs = self.processor(text=text, return_tensors="pt")
-        # Mover tensores al dispositivo correcto
-        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        # Tokenizar el texto y mover al dispositivo
+        inputs = self.tokenizer(text=text, return_tensors="pt").to(self.device)
 
+        # Inferencia sin gradientes
         with torch.no_grad():
             outputs = self.model(**inputs)
-            waveform = outputs.waveform  # Tensor shape: [1, num_samples]
 
-        waveform_np = waveform.squeeze().cpu().numpy()
-
-        # Normalizar a rango [-1, 1] por seguridad
-        max_val = np.max(np.abs(waveform_np))
-        if max_val > 0:
-            waveform_np = waveform_np / max_val
+        # outputs.waveform: tensor [batch, num_muestras]
+        waveform = outputs.waveform[0].cpu().numpy()
 
         # Crear carpeta de salida si no existe
         out_dir = os.path.dirname(output_path)
         if out_dir:
             os.makedirs(out_dir, exist_ok=True)
 
-        # Guardar archivo WAV
-        wav_write(output_path, sample_rate, waveform_np.astype(np.float32))
+        # Guardar WAV con la frecuencia del modelo (float32)
+        wav_write(output_path, int(self.sample_rate), waveform)
         print(f"[TTS] Audio guardado en: {output_path}")
 
 
@@ -189,7 +190,7 @@ class HandwrittenTextToSpeechPipeline:
 
         lines = []
         for i, (x, y, w, h) in enumerate(boxes):
-            roi = image_bgr[y : y + h, x : x + w]
+            roi = image_bgr[y: y + h, x: x + w]
             print(f"[PIPELINE] Reconociendo región {i + 1}/{len(boxes)}...")
             try:
                 line_text = self.recognizer.recognize_line(roi)
@@ -221,22 +222,44 @@ class HandwrittenTextToSpeechPipeline:
 
 def main():
     """
-    Ejemplo de uso desde línea de comandos.
-
-    Ejecutar:
-        python manuscrito_a_voz.py ruta/a/imagen.jpg salida/audio.wav
+    Ejecución desde línea de comandos usando carpetas fijas en el Escritorio.
     """
-    import argparse
 
-    parser = argparse.ArgumentParser(description="Sistema Integral de Reconocimiento de Texto Manuscrito a Voz")
-    parser.add_argument("image_path", type=str, help="Ruta de la imagen con texto manuscrito")
-    parser.add_argument("audio_output_path", type=str, help="Ruta de salida para el archivo de audio WAV")
-    parser.add_argument("--device", type=str, default=None, help="Dispositivo: 'cpu' o 'cuda' (si está disponible)")
+    import argparse
+    import os
+
+    IMAGE_DIR = "C:/Users/gaele/OneDrive/Escritorio/imagenes"
+    AUDIO_DIR = "C:/Users/gaele/OneDrive/Escritorio/audios"
+
+    parser = argparse.ArgumentParser(
+        description="Sistema Integral de Reconocimiento de Texto Manuscrito a Voz"
+    )
+
+    parser.add_argument(
+        "image_name",
+        type=str,
+        help="Nombre del archivo de imagen dentro de la carpeta 'imagenes'"
+    )
+    parser.add_argument(
+        "audio_name",
+        type=str,
+        help="Nombre del archivo de audio de salida dentro de la carpeta 'audios'"
+    )
+    parser.add_argument(
+        "--device",
+        type=str,
+        default=None,
+        help="Dispositivo: 'cpu' o 'cuda' (si está disponible)"
+    )
 
     args = parser.parse_args()
 
+    # Construimos las rutas completas usando las carpetas fijas
+    image_path = os.path.join(IMAGE_DIR, args.image_name)
+    audio_output_path = os.path.join(AUDIO_DIR, args.audio_name)
+
     pipeline = HandwrittenTextToSpeechPipeline(device=args.device)
-    pipeline.image_to_speech(args.image_path, args.audio_output_path)
+    pipeline.image_to_speech(image_path, audio_output_path)
 
 
 if __name__ == "__main__":
